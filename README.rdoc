@@ -1,0 +1,18 @@
+= StreamSend PHP API
+
+A set of classes for interacting with the StreamSend XML API
+
+=== Dependencies
+
+ * PHP 4.x, 5.x
+
+== Documentation
+
+Documentation for the PHP classes is provided inline.
+
+Documentation for the StreamSend XML API is available at 
+http://app.streamsend.com/docs/api/index.html.
+
+== License
+
+The StreamSend PHP API is released under the MIT license.
