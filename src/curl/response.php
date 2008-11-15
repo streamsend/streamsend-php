@@ -13,6 +13,7 @@ class CurlResponse
 			$this->headers = array();
 
 			curl_setopt($handle, CURLOPT_HEADERFUNCTION, array(&$this, '__parse_header'));
+			curl_setopt($handle, CURLOPT_RETURNTRANSFER, true);
 
 			$this->body = curl_exec($handle);
 			$this->info = curl_getinfo($handle);
