@@ -4,7 +4,7 @@ A set of classes for interacting with the StreamSend XML API
 
 === Dependencies
 
- * PHP 4.x, 5.x
+* PHP 4.x, 5.x
 
 == Documentation
 
