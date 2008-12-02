@@ -17,14 +17,14 @@ class Inflector
 	{
 		global $INFLECTIONS;
 
-        return Inflector::__inflect($INFLECTIONS['plural']);
+        return Inflector::__inflect($word, $INFLECTIONS['plural']);
 	}
 	
 	function singularize ($word)
 	{
 		global $INFLECTIONS;
 		
-        return Inflector::__inflect($INFLECTIONS['singular']);
+        return Inflector::__inflect($word, $INFLECTIONS['singular']);
 	}
 
 	function __inflect ($word, $inflections)
