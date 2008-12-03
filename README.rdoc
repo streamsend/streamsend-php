@@ -6,6 +6,17 @@ A set of classes for interacting with the StreamSend XML API
 
 * PHP 4.x, 5.x
 
+== Usage
+
+To use the classes, simply require <tt>src/streamsend.php</tt> in your code.
+Also, you must define two constants for your username and password so that
+you can properly authenticate with the API:
+
+  require_once 'streamsend-php/src/streamsend.php';
+
+  define('STREAMSEND_USERNAME', 'abc');
+  define('STREAMSEND_PASSWORD', '123');
+
 == Documentation
 
 Documentation for the PHP classes is provided inline.

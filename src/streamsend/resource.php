@@ -15,9 +15,9 @@ class StreamSendResource extends StreamSendObject
 	{
 		parent::StreamSendObject($attrs);
 		
-		$this->url      = 'http://localhost:3000';
-		$this->username = 'UsgK0ps18oEI';
-		$this->password = 'KpS3FV1lXelfZoME';
+		$this->url      = defined('STREAMSEND_URL') ? STREAMSEND_URL : 'https://app.streamsend.com';
+		$this->username = STREAMSEND_USERNAME;
+		$this->password = STREAMSEND_PASSWORD;
 		
 		$this->__class_name = 'Resource';
 	}
