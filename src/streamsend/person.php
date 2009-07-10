@@ -13,9 +13,11 @@ class StreamSendPerson extends StreamSendObject
 		return StreamSendResource::resource()->find('Person', $type, $options);
 	}
 	
-	function find_by_email_address ($email_address)
+	function find_by_email_address ($email_address, $options = array())
 	{
-		return StreamSendResource::resource()->find('Person', 'first', array('email_address' => $email_address));
+		$options['email_address'] = $email_address;
+		
+		return StreamSendResource::resource()->find('Person', 'first', $options);
 	}
 
 }
