@@ -19,6 +19,9 @@ class StreamSendUpload extends StreamSendObject
 			array('Accept: application/xml')
 		);
 	}
+	
+	function update () { return false; }
+	function destroy () { return false; }
 
 }
 
