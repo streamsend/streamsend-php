@@ -1,105 +1,124 @@
 <?
 
-require_once dirname(__FILE__) . '/object.php';
 require_once dirname(__FILE__) . '/../curl/request.php';
 
-class StreamSendResource extends StreamSendObject
+class StreamSendResource
 {
 
 	var $url;
-	var $uri;
 	var $username;
 	var $password;
-
-	function StreamSendResource ($attrs = array())
+	
+	function &resource()
 	{
-		parent::StreamSendObject($attrs);
+		$resource = &$GLOBALS['StreamSendResource'];
 		
+		$class = get_class($resource);
+		if (strtolower($class) != 'streamsendresource')
+			$resource = new StreamSendResource();
+		
+		return $resource;
+	}
+
+	function StreamSendResource ()
+	{
 		$this->url      = defined('STREAMSEND_URL') ? STREAMSEND_URL : 'https://app.streamsend.com';
 		$this->username = STREAMSEND_USERNAME;
 		$this->password = STREAMSEND_PASSWORD;
-		
-		$this->__class_name = 'Resource';
 	}
 	
-	function __find_by_id ($id)
+	function find ($class_name, $type, $options = array())
 	{
-		$response = $this->__request('GET', "/$id");
+		$class_name = "StreamSend" . $class_name;
+		
+		$class = new $class_name($options);
+		
+		switch ($type)
+		{
+			case "first":
+				return $this->__find_first($class, $options);
+			case "all":
+				return $this->__find_all($class, $options);
+			default:
+				return $this->__find_by_id($class, $type);
+		}
+	}
+	
+	function __find_by_id ($class, $id)
+	{
+		$response = $this->__request($class, 'GET', "/$id");
 		
 		$parser = new XMLParser();
 
 		$array = $parser->parse_into_array($response->body);
-		$attrs = $array[Inflector::underscore($this->__class_name)];
+		$attrs = $array[Inflector::underscore($class->class_name())];
 		
-		$class = "StreamSend" . $this->__class_name;
+		$class_name = "StreamSend" . $class->class_name();
 		
-		$obj = new $class($attrs);
-		
-		return $obj;
+		return new $class_name($attrs);
 	}
 	
-	function __find_first ($options = array())
+	function __find_first ($class, $options = array())
 	{
-		$results = $this->__find_all($options);
+		$results = $this->__find_all($class, $options);
 		
 		return array_shift($results);
 	}
 	
-	function __find_all ($options = array())
+	function __find_all ($class, $options = array())
 	{
 		$query_options = join('&', array_map(create_function('$a,$b', 'return "$a=$b";'), array_keys($options), array_values($options)));
 		
-		$response = $this->__request('GET', "?$query_options");
+		$response = $this->__request($class, 'GET', "?$query_options");
 		
 		$parser = new XMLParser();
 		
 		$array = $parser->parse_into_array($response->body);
 		
-		$class = "StreamSend" . $this->__class_name;
-		$singular = Inflector::underscore($this->__class_name);
+		$class_name = "StreamSend" . $class->class_name();
+		$singular = Inflector::underscore($class->class_name());
 		$plural = Inflector::pluralize($singular);
 		
-		$people = $array[$plural][$singular];
+		$records = $array[$plural][$singular];
 		
-		if (ArrayHelper::is_associative($people))
-			$people = array($people);
+		if (ArrayHelper::is_associative($records))
+			$records = array($records);
 		
 		$objects = array();
-		foreach ($people as $attrs)
-			$objects[] = new $class($attrs);
+		foreach ($records as $attrs)
+			$objects[] = new $class_name($attrs);
 
 		return $objects;
 	}
 	
-	function __create ($data = null, $headers = null)
+	function create ($object, $data = null, $headers = null)
 	{
-		$response = $this->__request('POST', '', $data, $headers);
+		if (is_null($data))
+			$data = $object->to_xml();
+
+		$response = $this->__request($object, 'POST', '', $data, $headers);
 			
 		if (preg_match('/\/(\d+)(\.xml)?$/', $response->headers['Location'], $matches))
-			$this->attributes[$this->__primary_key] = $matches[1];
+			$object->attributes['id'] = $matches[1];
 		
 		return true;
 	}
 	
-	function __update ()
+	function update ($object)
 	{
-		$id = $this->id();
-		
-		$this->__request('PUT', "/{$id}");
+		$this->__request($object, 'PUT', "/" . $object->id(), $object->to_xml());
 
 		return true;
 	}
 	
-	function __destroy ()
+	function destroy ($object)
 	{
-		$id = $this->id();
-		
-		$response = $this->__request('DELETE', "/{$id}");
+		$response = $this->__request($object, 'DELETE', "/" . $object->id());
 
 		return true;
 	}
 	
-	function __request ($method, $path, $data = null, $headers = null)
+	function __request ($object_or_class, $method, $path, $data = null, $headers = null)
 	{		
 		if (is_null($headers))
 		{
@@ -109,40 +128,23 @@ class StreamSendResource extends StreamSendObject
 			);
 		}
 		
-		if (is_null($data))
-		{
-			$class_name = Inflector::underscore($this->__class_name);
-			$data = "<$class_name>" . ArrayHelper::array_to_xml($this->attributes) . "</$class_name>";
-		}
-		
 		$request = new CurlRequest();
 		
 		$request->headers = $headers;
 
-		$request->url = $this->url . $this->__interpolated_uri() . $path;
+		$request->url = $this->url . $object_or_class->interpolated_uri() . $path;
 		$request->username = $this->username;
 		$request->password = $this->password;
 
 		$request->set(CURLOPT_CUSTOMREQUEST, $method);
 		$request->set(CURLOPT_SSL_VERIFYPEER, false);
-		$request->set(CURLOPT_POSTFIELDS, $data);
+		
+		if (!empty($data))
+			$request->set(CURLOPT_POSTFIELDS, $data);
 		
 		$response = $request->execute();
 		
 		return $response;
-	}
-	
-	function __uri ()
-	{
-		if (is_null($this->uri))
-			return "/" . Inflector::pluralize(Inflector::underscore($this->__class_name));
-		
-		return $this->uri;
-	}
-	
-	function __interpolated_uri ()
-	{	
-		return preg_replace("/:(\w+)/e", "\$this->attributes['\\1']", $this->__uri());
 	}
 
 }

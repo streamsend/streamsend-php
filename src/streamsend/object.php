@@ -4,22 +4,28 @@ class StreamSendObject
 {
 	
 	var $attributes = array();
-	var $errors = array();
-	
-	var $__class_name;
-	var $__primary_key;
 
 	function StreamSendObject ($attrs = array())
-	{
+	{		
 		$this->attributes = $attrs;
+	}
+	
+	function class_name () { return 'Object'; }
+	function uri ()        { return null; }
+	
+	function interpolated_uri ()
+	{
+		$uri = $this->uri();
 		
-		$this->__class_name = 'Object';
-		$this->__primary_key = 'id';
+		if (is_null($uri))
+			$uri = "/" . Inflector::pluralize(Inflector::underscore($this->class_name()));
+			
+		return preg_replace("/:(\w+)/e", "\$this->attributes['\\1']", $uri);
 	}
 	
 	function id ()
 	{
-		return $this->attributes[$this->__primary_key];
+		return $this->attributes['id'];
 	}
 	
 	function get ($key)
@@ -27,26 +33,20 @@ class StreamSendObject
 		return $this->attributes[$key];
 	}
 	
+	function new_record ()
+	{
+		$id = $this->id();
+		
+		return is_null($id) || empty($id);
+	}
+	
 	function reload ()
 	{
-		$obj = $this->find($this->id());
+		$obj = StreamSendResource::resource()->find($this->class_name(), $this->id());
 		
 		$this->attributes = $obj->attributes;
 		
 		return true;
-	}
-	
-	function find ($type, $options = array())
-	{
-		switch ($type)
-		{
-			case "first":
-				return $this->__find_first($options);
-			case "all":
-				return $this->__find_all($options);
-			default:
-				return $this->__find_by_id($type);
-		}
 	}
 	
 	function save () { return $this->save_with_callbacks(); }
@@ -86,7 +86,7 @@ class StreamSendObject
 	
 	function create_without_callbacks ()
 	{
-		return $this->__create();
+		return StreamSendResource::resource()->create($this);
 	}
 	
 	function update () { return $this->update_with_callbacks(); }
@@ -108,7 +108,7 @@ class StreamSendObject
 	
 	function update_without_callbacks ()
 	{
-		return $this->__update();
+		return StreamSendResource::resource()->update($this);
 	}
 	
 	function destroy () { return $this->destroy_with_callbacks(); }
@@ -127,7 +127,15 @@ class StreamSendObject
 	
 	function destroy_without_callbacks ()
 	{
-		return $this->__destroy();
+		return StreamSendResource::resource()->destroy($this);
+	}
+	
+	function to_xml ($options = array())
+	{
+		if (empty($options['root']))
+			$options['root'] = Inflector::underscore($this->class_name());
+
+		return "<{$options['root']}>" . ArrayHelper::array_to_xml($this->attributes) . "</{$options['root']}>";	
 	}
 	
 }

@@ -1,21 +1,21 @@
 <?
 
-require_once dirname(__FILE__) . '/resource.php';
+require_once dirname(__FILE__) . '/object.php';
 
-class StreamSendPerson extends StreamSendResource
+class StreamSendPerson extends StreamSendObject
 {
 
-	function StreamSendPerson ($attrs = array())
+	function class_name () { return 'Person'; }
+	function uri ()        { return '/audiences/:audience_id/people'; }
+	
+	function find ($type, $options = array())
 	{
-		parent::StreamSendResource($attrs);
-
-		$this->__class_name = 'Person';
-		$this->uri = '/audiences/:audience_id/people';
+		return StreamSendResource::resource()->find('Person', $type, $options);
 	}
 	
 	function find_by_email_address ($email_address)
 	{
-		return $this->find('first', array('email_address' => $email_address));
+		return StreamSendResource::resource()->find('Person', 'first', array('email_address' => $email_address));
 	}
 
 }

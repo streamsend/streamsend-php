@@ -1,20 +1,23 @@
 <?
 
-require_once dirname(__FILE__) . '/resource.php';
+require_once dirname(__FILE__) . '/object.php';
 
-class StreamSendUpload extends StreamSendResource
+class StreamSendUpload extends StreamSendObject
 {
-
-	function StreamSendUpload ($attrs = array())
+	
+	function class_name () { return 'Upload'; }
+	
+	function find ($type, $options = array())
 	{
-		parent::StreamSendResource($attrs);
-
-		$this->__class_name = 'Upload';
+		return StreamSendResource::resource()->find('Upload', $type, $options);
 	}
 
 	function create_without_callbacks ()
 	{
-		return $this->__create(array('data' => "@{$this->attributes['filename']}"), array('Accept: application/xml'));
+		return StreamSendResource::resource()->create($this, 
+			array('data' => "@{$this->attributes['filename']}"),
+			array('Accept: application/xml')
+		);
 	}
 
 }

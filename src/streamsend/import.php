@@ -1,16 +1,16 @@
 <?
 
-require_once dirname(__FILE__) . '/resource.php';
+require_once dirname(__FILE__) . '/object.php';
 
-class StreamSendImport extends StreamSendResource
+class StreamSendImport extends StreamSendObject
 {
-
-	function StreamSendImport ($attrs = array())
+	
+	function class_name () { return 'Import'; }
+	function uri ()        { return '/audiences/:audience_id/imports'; }
+	
+	function find ($type, $options = array())
 	{
-		parent::StreamSendResource($attrs);
-		
-		$this->__class_name = 'Import';
-		$this->uri = '/audiences/:audience_id/imports';
+		return StreamSendResource::resource()->find('Import', $type, $options);
 	}
 	
 	function waiting ()

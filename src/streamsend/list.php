@@ -1,17 +1,18 @@
 <?
 
-require_once dirname(__FILE__) . '/resource.php';
+require_once dirname(__FILE__) . '/object.php';
 
-class StreamSendList extends StreamSendResource
+class StreamSendList extends StreamSendObject
 {
 	
-	function StreamSendList ($attrs = array())
+	function class_name () { return 'List'; }
+	function uri ()        { return '/audience/:audience_id/lists'; }
+	
+	function find ($type, $options = array())
 	{
-		parent::StreamSendResource($attrs);
-		
-		$this->__class_name = 'List';
-		$this->uri = '/audience/:audience_id/lists';
+		return StreamSendResource::resource()->find('List', $type, $options);
 	}
+	
 }
 
 ?>
