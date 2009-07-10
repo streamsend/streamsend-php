@@ -6,7 +6,7 @@ class StreamSendList extends StreamSendObject
 {
 	
 	function class_name () { return 'List'; }
-	function uri ()        { return '/audience/:audience_id/lists'; }
+	function uri ()        { return '/audiences/:audience_id/lists'; }
 	
 	function find ($type, $options = array())
 	{
