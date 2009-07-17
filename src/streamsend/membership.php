@@ -2,7 +2,7 @@
 
 require_once dirname(__FILE__) . '/object.php';
 
-class StreamSendMembership extends StreamSendObject
+class SSMembership extends SSObject
 {
 	
 	function class_name () { return 'Membership'; }

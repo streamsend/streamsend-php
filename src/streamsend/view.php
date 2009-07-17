@@ -2,7 +2,7 @@
 
 require_once dirname(__FILE__) . '/object.php';
 
-class StreamSendView extends StreamSendObject
+class SSView extends SSObject
 {
 	
 	function class_name () { return 'View'; }

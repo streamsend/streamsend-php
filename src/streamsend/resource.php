@@ -2,7 +2,7 @@
 
 require_once dirname(__FILE__) . '/../curl/request.php';
 
-class StreamSendResource
+class SSResource
 {
 
 	var $url;
@@ -11,16 +11,16 @@ class StreamSendResource
 	
 	function &resource()
 	{
-		$resource = &$GLOBALS['StreamSendResource'];
+		$resource = &$GLOBALS['SSResource'];
 		
 		$class = get_class($resource);
-		if (strtolower($class) != 'streamsendresource')
-			$resource = new StreamSendResource();
+		if (strtolower($class) != 'ssresource')
+			$resource = new SSResource();
 		
 		return $resource;
 	}
 
-	function StreamSendResource ()
+	function SSResource ()
 	{
 		$this->url      = defined('STREAMSEND_URL') ? STREAMSEND_URL : 'https://app.streamsend.com';
 		$this->username = STREAMSEND_USERNAME;
@@ -29,7 +29,7 @@ class StreamSendResource
 	
 	function find ($class_name, $type, $options = array())
 	{
-		$class_name = "StreamSend" . $class_name;
+		$class_name = "SS" . $class_name;
 		
 		$class = new $class_name($options);
 		
@@ -53,7 +53,7 @@ class StreamSendResource
 		$array = $parser->parse_into_array($response->body);
 		$attrs = $array[Inflector::underscore($class->class_name())];
 		
-		$class_name = "StreamSend" . $class->class_name();
+		$class_name = "SS" . $class->class_name();
 		
 		return new $class_name($attrs);
 	}
@@ -75,7 +75,7 @@ class StreamSendResource
 		
 		$array = $parser->parse_into_array($response->body);
 		
-		$class_name = "StreamSend" . $class->class_name();
+		$class_name = "SS" . $class->class_name();
 		$singular = Inflector::underscore($class->class_name());
 		$plural = Inflector::pluralize($singular);
 		

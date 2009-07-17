@@ -2,7 +2,7 @@
 
 require_once dirname(__FILE__) . '/object.php';
 
-class StreamSendField extends StreamSendObject
+class SSField extends SSObject
 {
 	
 	function class_name () { return 'Field'; }

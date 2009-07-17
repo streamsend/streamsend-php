@@ -2,7 +2,7 @@
 
 require_once dirname(__FILE__) . '/object.php';
 
-class StreamSendImport extends StreamSendObject
+class SSImport extends SSObject
 {
 	
 	function class_name () { return 'Import'; }
@@ -10,7 +10,7 @@ class StreamSendImport extends StreamSendObject
 	
 	function find ($type, $options = array())
 	{
-		return StreamSendResource::resource()->find('Import', $type, $options);
+		return SSResource::resource()->find('Import', $type, $options);
 	}
 	
 	function waiting ()

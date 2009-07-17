@@ -2,7 +2,7 @@
 
 require_once dirname(__FILE__) . '/object.php';
 
-class StreamSendLink extends StreamSendObject
+class SSLink extends SSObject
 {
 	
 	function class_name () { return 'Link'; }

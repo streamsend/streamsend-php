@@ -2,7 +2,7 @@
 
 require_once dirname(__FILE__) . '/object.php';
 
-class StreamSendList extends StreamSendObject
+class SSList extends SSObject
 {
 	
 	function class_name () { return 'List'; }
@@ -10,7 +10,7 @@ class StreamSendList extends StreamSendObject
 	
 	function find ($type, $options = array())
 	{
-		return StreamSendResource::resource()->find('List', $type, $options);
+		return SSResource::resource()->find('List', $type, $options);
 	}
 	
 }

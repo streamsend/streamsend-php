@@ -2,19 +2,19 @@
 
 require_once dirname(__FILE__) . '/object.php';
 
-class StreamSendUpload extends StreamSendObject
+class SSUpload extends SSObject
 {
 	
 	function class_name () { return 'Upload'; }
 	
 	function find ($type, $options = array())
 	{
-		return StreamSendResource::resource()->find('Upload', $type, $options);
+		return SSResource::resource()->find('Upload', $type, $options);
 	}
 
 	function create_without_callbacks ()
 	{
-		return StreamSendResource::resource()->create($this, 
+		return SSResource::resource()->create($this, 
 			array('data' => "@{$this->attributes['filename']}"),
 			array('Accept: application/xml')
 		);

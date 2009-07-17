@@ -1,11 +1,11 @@
 <?
 
-class StreamSendObject
+class SSObject
 {
 	
 	var $attributes = array();
 
-	function StreamSendObject ($attrs = array())
+	function SSObject ($attrs = array())
 	{		
 		$this->attributes = $attrs;
 	}
@@ -42,7 +42,7 @@ class StreamSendObject
 	
 	function reload ()
 	{
-		$obj = StreamSendResource::resource()->find($this->class_name(), $this->id());
+		$obj = SSResource::resource()->find($this->class_name(), $this->id());
 		
 		$this->attributes = $obj->attributes;
 		
@@ -86,7 +86,7 @@ class StreamSendObject
 	
 	function create_without_callbacks ()
 	{
-		return StreamSendResource::resource()->create($this);
+		return SSResource::resource()->create($this);
 	}
 	
 	function update () { return $this->update_with_callbacks(); }
@@ -108,7 +108,7 @@ class StreamSendObject
 	
 	function update_without_callbacks ()
 	{
-		return StreamSendResource::resource()->update($this);
+		return SSResource::resource()->update($this);
 	}
 	
 	function destroy () { return $this->destroy_with_callbacks(); }
@@ -127,7 +127,7 @@ class StreamSendObject
 	
 	function destroy_without_callbacks ()
 	{
-		return StreamSendResource::resource()->destroy($this);
+		return SSResource::resource()->destroy($this);
 	}
 	
 	function to_xml ($options = array())

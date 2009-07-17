@@ -2,14 +2,14 @@
 
 require_once dirname(__FILE__) . '/object.php';
 
-class StreamSendAudience extends StreamSendObject
+class SSAudience extends SSObject
 {
 	
 	function class_name () { return 'Audience'; }
 	
 	function find ($type, $options = array())
 	{
-		return StreamSendResource::resource()->find('Audience', $type, $options);
+		return SSResource::resource()->find('Audience', $type, $options);
 	}
 	
 	function create () { return false; }

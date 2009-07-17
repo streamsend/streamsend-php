@@ -2,7 +2,7 @@
 
 require_once dirname(__FILE__) . '/object.php';
 
-class StreamSendUnsubscribe extends StreamSendObject
+class SSUnsubscribe extends SSObject
 {
 	
 	function class_name () { return 'Unsubscribe'; }
