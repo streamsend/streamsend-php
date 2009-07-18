@@ -69,8 +69,6 @@ class XMLParser
 				else
 					$hash[$key] = $value;
 			}
-				
-			$this->__index++;
 		}
 		
 		return $hash;
