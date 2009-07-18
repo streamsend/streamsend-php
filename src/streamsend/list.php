@@ -10,7 +10,8 @@ class SSList extends SSObject
 	
 	function find ($type, $options = array())
 	{
-		return SSResource::resource()->find('List', $type, $options);
+		$res = &SSResource::resource();
+		return $res->find('List', $type, $options);
 	}
 	
 }

@@ -42,7 +42,8 @@ class SSObject
 	
 	function reload ()
 	{
-		$obj = SSResource::resource()->find($this->class_name(), $this->id());
+		$res = &SSResource::resource();
+		$obj = $res->find($this->class_name(), $this->id());
 		
 		$this->attributes = $obj->attributes;
 		
@@ -86,7 +87,8 @@ class SSObject
 	
 	function create_without_callbacks ()
 	{
-		return SSResource::resource()->create($this);
+		$res = &SSResource::resource();
+		return $res->create($this);
 	}
 	
 	function update () { return $this->update_with_callbacks(); }
@@ -108,7 +110,8 @@ class SSObject
 	
 	function update_without_callbacks ()
 	{
-		return SSResource::resource()->update($this);
+		$res = &SSResource::resource();
+		return $res->update($this);
 	}
 	
 	function destroy () { return $this->destroy_with_callbacks(); }
@@ -127,7 +130,8 @@ class SSObject
 	
 	function destroy_without_callbacks ()
 	{
-		return SSResource::resource()->destroy($this);
+		$res = &SSResource::resource();
+		return $res->destroy($this);
 	}
 	
 	function to_xml ($options = array())

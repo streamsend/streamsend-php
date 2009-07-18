@@ -9,12 +9,14 @@ class SSUpload extends SSObject
 	
 	function find ($type, $options = array())
 	{
-		return SSResource::resource()->find('Upload', $type, $options);
+		$res = &SSResource::resource();
+		return $res->find('Upload', $type, $options);
 	}
 
 	function create_without_callbacks ()
 	{
-		return SSResource::resource()->create($this, 
+		$res = &SSResource::resource();
+		return $res->create($this, 
 			array('data' => "@{$this->attributes['filename']}"),
 			array('Accept: application/xml')
 		);

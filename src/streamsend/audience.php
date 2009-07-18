@@ -9,7 +9,8 @@ class SSAudience extends SSObject
 	
 	function find ($type, $options = array())
 	{
-		return SSResource::resource()->find('Audience', $type, $options);
+		$res = &SSResource::resource();
+		return $res->find('Audience', $type, $options);
 	}
 	
 	function create () { return false; }

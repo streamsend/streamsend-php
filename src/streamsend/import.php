@@ -10,7 +10,8 @@ class SSImport extends SSObject
 	
 	function find ($type, $options = array())
 	{
-		return SSResource::resource()->find('Import', $type, $options);
+		$res = &SSResource::resource();
+		return $res->find('Import', $type, $options);
 	}
 	
 	function waiting ()

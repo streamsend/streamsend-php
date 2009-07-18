@@ -9,7 +9,8 @@ class SSFromEmailAddress extends SSObject
 	
 	function find ($type, $options = array())
 	{
-		return SSResource::resource()->find('FromEmailAddress', $type, $options);
+		$res = &SSResource::resource();
+		return $res->find('FromEmailAddress', $type, $options);
 	}
 	
 	function update ()  { return false; }

@@ -10,14 +10,16 @@ class SSPerson extends SSObject
 	
 	function find ($type, $options = array())
 	{
-		return SSResource::resource()->find('Person', $type, $options);
+		$res = &SSResource::resource();
+		return $res->find('Person', $type, $options);
 	}
 	
 	function find_by_email_address ($email_address, $options = array())
 	{
 		$options['email_address'] = $email_address;
 		
-		return SSResource::resource()->find('Person', 'first', $options);
+		$res = &SSResource::resource();
+		return $res->find('Person', 'first', $options);
 	}
 
 }
