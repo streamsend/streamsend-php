@@ -46,7 +46,7 @@ class XMLParser
 					$value = $this->__parse_block_into_array();					
 					break;
 				case 'complete':
-					$value = $element['value'];
+					$value = isset($element['value']) ? $element['value'] : '';
 					
 					if (isset($attributes['encoding']) && $attributes['encoding'] == 'base64')
 						$value = base64_decode($value);
