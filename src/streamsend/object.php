@@ -6,21 +6,31 @@ class SSObject
 	var $attributes = array();
 
 	function SSObject ($attrs = array())
-	{		
+	{
+		if (preg_match_all("/:(\w+)/", $this->uri(), $matches))
+		{
+			$this->__uri = array();
+
+			foreach ($matches[1] as $key)
+				$this->__uri[$key] = ArrayHelper::array_delete($attrs, $key);
+		}
+
 		$this->attributes = $attrs;
 	}
 	
 	function class_name () { return 'Object'; }
-	function uri ()        { return null; }
+	function uri ()
+	{
+		return "/" . Inflector::pluralize(Inflector::underscore($this->class_name()));
+	}
 	
 	function interpolated_uri ()
 	{
-		$uri = $this->uri();
-		
-		if (is_null($uri))
-			$uri = "/" . Inflector::pluralize(Inflector::underscore($this->class_name()));
-			
-		return preg_replace("/:(\w+)/e", "\$this->attributes['\\1']", $uri);
+		$options = $this->attributes;
+		if (isset($this->__uri))
+			$options = array_merge($options, $this->__uri);
+
+		return preg_replace("/:(\w+)/e", "\$options['\\1']", $this->uri());
 	}
 	
 	function id ()
