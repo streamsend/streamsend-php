@@ -94,34 +94,57 @@ class SSResource
 		return $objects;
 	}
 	
-	function create ($object, $data = null, $headers = null)
+	function create (&$object, $data = null, $headers = null)
 	{
 		if (is_null($data))
 			$data = $object->to_xml();
 
 		$response = $this->__request($object, 'POST', '', $data, $headers);
-			
-		if (preg_match('/\/(\d+)(\.xml)?$/', $response->headers['Location'], $matches))
-			$object->attributes['id'] = $matches[1];
-		
-		return true;
-	}
-	
-	function update ($object)
-	{
-		$this->__request($object, 'PUT', "/" . $object->id(), $object->to_xml());
 
-		return true;
+		if ($response->is_success())
+		{
+			if (preg_match('/\/(\d+)(\.xml)?$/', $response->headers['Location'], $matches))
+				$object->attributes['id'] = $matches[1];
+
+			return true;
+		}
+		elseif ($response->is_failure())
+		{
+			$this->__parse_errors($object, $response->body);
+
+			return false;
+		}
 	}
 	
-	function destroy ($object)
+	function update (&$object)
+	{
+		$response = $this->__request($object, 'PUT', "/" . $object->id(), $object->to_xml());
+
+		if ($response->is_success())
+			return true;
+		elseif ($response->is_failure())
+		{
+			$this->__parse_errors($object, $response->body);
+
+			return false;
+		}
+	}
+	
+	function destroy (&$object)
 	{
 		$response = $this->__request($object, 'DELETE', "/" . $object->id());
 
-		return true;
+		if ($response->is_success())
+			return true;
+		elseif ($response->is_failure())
+		{
+			$this->__parse_errors($object, $response->body);
+
+			return false;
+		}
 	}
 	
-	function __request ($object_or_class, $method, $path, $data = null, $headers = null)
+	function __request (&$object_or_class, $method, $path, $data = null, $headers = null)
 	{
 		if (is_null($headers))
 		{
@@ -148,6 +171,21 @@ class SSResource
 		$response = $request->execute();
 		
 		return $response;
+	}
+
+	function __parse_errors (&$object, $string)
+	{
+		$parser = new XMLParser();
+
+		$array = $parser->parse_into_array($string);
+
+		if (isset($array['errors']) && isset($array['errors']['error']))
+		{
+			$object->errors = $array['errors']['error'];
+
+			if (!is_array($object->errors))
+				$object->errors = array($object->errors);
+		}
 	}
 
 }

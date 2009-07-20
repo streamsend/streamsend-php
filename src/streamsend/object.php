@@ -4,6 +4,7 @@ class SSObject
 {
 	
 	var $attributes = array();
+	var $errors     = array();
 
 	function SSObject ($attrs = array())
 	{
@@ -35,11 +36,17 @@ class SSObject
 	
 	function id ()
 	{
+		if (!isset($this->attributes['id']))
+			return null;
+
 		return $this->attributes['id'];
 	}
 	
 	function get ($key)
 	{
+		if (!isset($this->attributes[$key]))
+			return null;
+
 		return $this->attributes[$key];
 	}
 	

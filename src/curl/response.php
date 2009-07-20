@@ -34,6 +34,44 @@ class CurlResponse
 
 		return strlen($header);
 	}
+
+	function status_code ()
+	{
+		if (!isset($this->info['http_code']))
+			return null;
+
+		return $this->info['http_code'];
+	}
+
+	function is_success ()
+	{
+		$code = $this->status_code();
+
+		if (is_null($code))
+			return null;
+
+		return $code >= 200 && $code < 300;
+	}
+
+	function is_redirect ()
+	{
+		$code = $this->status_code();
+
+		if (is_null($code))
+			return null;
+
+		return $code >= 300 && $code < 400;
+	}
+
+	function is_failure ()
+	{
+		$code = $this->status_code();
+
+		if (is_null($code))
+			return null;
+
+		return $code >= 400 && $code < 600;
+	}
 }
 
 ?>
