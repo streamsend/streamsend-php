@@ -36,9 +36,9 @@ class SSResource
 		switch ($type)
 		{
 			case "first":
-				return $this->__find_first($class, $options);
+				return $this->__find_first($class);
 			case "all":
-				return $this->__find_all($class, $options);
+				return $this->__find_all($class);
 			default:
 				return $this->__find_by_id($class, $type);
 		}
@@ -58,18 +58,21 @@ class SSResource
 		return new $class_name($attrs);
 	}
 	
-	function __find_first ($class, $options = array())
+	function __find_first ($class)
 	{
-		$results = $this->__find_all($class, $options);
+		$results = $this->__find_all($class);
 		
 		return array_shift($results);
 	}
 	
-	function __find_all ($class, $options = array())
+	function __find_all ($class)
 	{
-		$query_options = join('&', array_map(create_function('$a,$b', 'return "$a=$b";'), array_keys($options), array_values($options)));
+		$query_string = "";
+
+		if (count($class->attributes) > 0)
+			$query_string = "?" . join('&', array_map(create_function('$a,$b', 'return "$a=$b";'), array_keys($class->attributes), array_values($class->attributes)));
 		
-		$response = $this->__request($class, 'GET', "?$query_options");
+		$response = $this->__request($class, 'GET', $query_string);
 		
 		$parser = new XMLParser();
 		
@@ -119,7 +122,7 @@ class SSResource
 	}
 	
 	function __request ($object_or_class, $method, $path, $data = null, $headers = null)
-	{		
+	{
 		if (is_null($headers))
 		{
 			$headers = array(
