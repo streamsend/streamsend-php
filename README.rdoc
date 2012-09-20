@@ -19,7 +19,7 @@ you can properly authenticate with the API:
 
 == Documentation
 
-Documentation for the PHP classes is available at http://wiki.github.com/ezpub/streamsend-php.
+Documentation for the PHP classes is available at http://wiki.github.com/streamsend/streamsend-php.
 
 Documentation for the StreamSend XML API is available at 
 http://app.streamsend.com/docs/api/index.html.
