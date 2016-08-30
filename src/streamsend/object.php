@@ -28,11 +28,14 @@ class SSObject
 	function interpolated_uri ()
 	{
 		$options = $this->attributes;
-		if (isset($this->__uri))
+        if (isset($this->__uri))
 			$options = array_merge($options, $this->__uri);
-
-		return preg_replace("/:(\w+)/e", "\$options['\\1']", $this->uri());
-	}
+        
+        $uri  = preg_replace("/:(\w+)/e", "\$options['\\1']", $this->uri());
+	
+        $uri = str_replace('audiences//', 'audiences/1/', $uri);
+        return $uri;
+    }
 	
 	function id ()
 	{
@@ -133,6 +136,10 @@ class SSObject
 	
 	function destroy () { return $this->destroy_with_callbacks(); }
 	
+	function before_destroy () { return true; }
+    function after_destroy ()  { return true; }
+    
+	
 	function destroy_with_callbacks ()
 	{
 		if (!$this->before_destroy())
@@ -150,6 +157,8 @@ class SSObject
 		$res = &SSResource::resource();
 		return $res->destroy($this);
 	}
+	
+	
 	
 	function to_xml ($options = array())
 	{

@@ -10,6 +10,11 @@ class SSMembership extends SSObject
 
 	function update ()  { return false; }
 	
+    function find ($type, $options = array())
+    {
+        $res = &SSResource::resource();
+        return $res->find('Membership', $type, $options);
+    }
 }
 
 ?>

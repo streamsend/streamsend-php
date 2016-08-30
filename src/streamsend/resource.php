@@ -1,25 +1,41 @@
 <?
 
 require_once dirname(__FILE__) . '/../curl/request.php';
-
 class SSResource
 {
+    protected static $instance = false;
 
 	var $url;
 	var $username;
 	var $password;
 	
+    function &resource()
+    {
+        if(self::$instance === false){
+            self::$instance = new SSResource;    
+        }    
+        
+        return self::$instance;
+    }
+    
+
+/*
 	function &resource()
 	{
 		$resource = &$GLOBALS['SSResource'];
-		
+        
 		$class = get_class($resource);
+        var_dump($resource, $class);
+        exit;
+        
+        var_dump($class);
+        
 		if (strtolower($class) != 'ssresource')
 			$resource = new SSResource();
 		
 		return $resource;
 	}
-
+*/
 	function SSResource ()
 	{
 		$this->url      = defined('STREAMSEND_URL') ? STREAMSEND_URL : 'https://app.streamsend.com';
@@ -28,7 +44,7 @@ class SSResource
 	}
 	
 	function find ($class_name, $type, $options = array())
-	{
+	{  
 		$class_name = "SS" . $class_name;
 		
 		$class = new $class_name($options);
@@ -83,13 +99,14 @@ class SSResource
 		$plural = Inflector::pluralize($singular);
 		
 		$records = $array[$plural][$singular];
-		
+        
 		if (ArrayHelper::is_associative($records))
 			$records = array($records);
-		
 		$objects = array();
-		foreach ($records as $attrs)
-			$objects[] = new $class_name($attrs);
+        
+        if(is_array($records))
+            foreach ($records as $attrs)
+			 $objects[] = new $class_name($attrs);
 
 		return $objects;
 	}
@@ -159,6 +176,7 @@ class SSResource
 		$request->headers = $headers;
 
 		$request->url = $this->url . $object_or_class->interpolated_uri() . $path;
+		
 		$request->username = $this->username;
 		$request->password = $this->password;
 
@@ -169,7 +187,6 @@ class SSResource
 			$request->set(CURLOPT_POSTFIELDS, $data);
 		
 		$response = $request->execute();
-		
 		return $response;
 	}
 

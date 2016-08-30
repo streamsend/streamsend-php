@@ -1,8 +1,22 @@
 <?
 
+
+
 class Inflector
 {
-	
+    protected static $INFLECTIONS = array(
+        'plural' => array(
+            array('/(p)erson/i', '\\1eople'),
+            array('/$/', 's')
+        ),
+        'singular' => array(
+            array('/(p)eople/i', '\\1erson'),
+            array('/s$/i', '')
+        )
+    );
+    	
+
+
 	function underscore ($camel_cased_word)
 	{
 		$word = preg_replace('/([A-Z]+)([A-Z][a-z])/', '\1_\2', $camel_cased_word);
@@ -15,44 +29,37 @@ class Inflector
 	
 	function pluralize ($word)
 	{
-		global $INFLECTIONS;
+		//global $INFLECTIONS;
 
-        return Inflector::__inflect($word, $INFLECTIONS['plural']);
+        return Inflector::__inflect($word, self::$INFLECTIONS['plural']);
 	}
 	
 	function singularize ($word)
 	{
-		global $INFLECTIONS;
+		//global $INFLECTIONS;
 		
-        return Inflector::__inflect($word, $INFLECTIONS['singular']);
+        return Inflector::__inflect($word, self::$INFLECTIONS['singular']);
 	}
 
 	function __inflect ($word, $inflections)
 	{
-		foreach ($inflections as $inflection)
-		{
-			list($find, $replace) = $inflection;
-			
-			$new = preg_replace($find, $replace, $word);
-			
-			if ($new != $word)
-				return $new;
-		}
+        if(is_array($inflections)){
+            foreach ($inflections as $inflection)
+            {
+                list($find, $replace) = $inflection;
+                
+                $new = preg_replace($find, $replace, $word);
+                
+                if ($new != $word)
+                    return $new;
+            }
+        }
 		
 		return $word;
 	}
 
 }
 
-$INFLECTIONS = array(
-	'plural' => array(
-		array('/(p)erson/i', '\\1eople'),
-		array('/$/', 's')
-	),
-	'singular' => array(
-		array('/(p)eople/i', '\\1erson'),
-		array('/s$/i', '')
-	)
-);
+
 
 ?>
