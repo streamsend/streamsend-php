@@ -1,3 +1,6 @@
+> This project is no longer maintained and our API has changed.
+> Please see our current API docs here: http://app.streamsend.com/docs/api/index.html
+
 = StreamSend PHP API
 
 A set of classes for interacting with the StreamSend XML API
